@@ -1,30 +1,93 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Glow from '../components/Glow.astro';
+import { SERVICES } from '../site';
 
-const services = [
-  { title: 'Website design', text: 'Custom layouts and visual design tailored to your brand and audience.' },
-  { title: 'Website development', text: 'Fast, accessible static sites built with modern tools like Astro.' },
-  { title: 'Redesigns', text: 'Refresh an outdated site with a cleaner look and better performance.' },
-  { title: 'Care & maintenance', text: 'Ongoing updates, content changes and monitoring after launch.' },
+const faqs = [
+  { q: 'Do you only work with SaaS companies?', a: 'Our focus is SaaS and tech companies, though we occasionally work with adjacent businesses.' },
+  { q: 'Can you take over a website that someone else built?', a: 'Yes. We assess what is there and improve it from that point.' },
+  { q: 'We are going through a rebrand, acquisition, or company pivot. Can you help?', a: 'Yes. We handle spinouts, migrations and redirects.' },
+  { q: 'What CMS and tech stack do you work with?', a: 'Primarily WordPress and Webflow, along with Elementor, Beaver Builder, Gutenberg, WP Engine, HubSpot, Gravity Forms, WP Rocket and NitroPack.' },
+  { q: 'How do you handle conversion tracking and marketing integrations?', a: 'We set up and work with GA4, Google Tag Manager, HubSpot, Chili Piper and Calendly.' },
+  { q: 'What is your pricing model?', a: 'We work on a monthly retainer rather than hourly billing.' },
 ];
 ---
 
-<Layout title="Services" description="Website design, development, redesigns and ongoing care.">
-  <h1>Services</h1>
-  <p class="lead">Everything you need to plan, build and run a great website.</p>
+<Layout title="Services" description="Website strategy, UX, design, WordPress and Webflow development, conversion optimization and ongoing support for SaaS teams.">
+  <section class="hero">
+    <Glow />
+    <p class="kicker reveal">Services</p>
+    <h1 class="reveal" style="--i:1">Everything Your Website Needs to <span class="gradient-text shimmer">Support Growth</span></h1>
+    <p class="lead reveal" style="--i:2">From strategy and design to development, optimization and ongoing support, all in one partner.</p>
+  </section>
 
-  <div class="grid">
-    {services.map(({ title, text }) => (
-      <div class="card">
+  <section class="bento">
+    {SERVICES.map(({ title, text, icon }, i) => (
+      <div class="card lift reveal" style={`--i:${i}`}>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d={icon} /></svg>
         <h3>{title}</h3>
         <p>{text}</p>
       </div>
     ))}
-  </div>
+  </section>
 
-  <p class="more">Not sure what you need? <a href="/contact">Get in touch</a> and we'll help you figure it out.</p>
+  <section>
+    <h2 class="reveal">Frequently asked questions</h2>
+    <div class="faq">
+      {faqs.map(({ q, a }, i) => (
+        <details class="reveal" style={`--i:${i}`}>
+          <summary>{q}<span class="toggle" aria-hidden="true"></span></summary>
+          <p>{a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="more reveal">
+    <p>Not sure what you need?</p>
+    <a href="/contact" class="btn">Schedule a Call</a>
+  </section>
 </Layout>
 
 <style lang="scss">
-  .more { margin-top: 3rem; }
+  h1 { font-size: clamp(2.5rem, 7vw, 4.5rem); max-width: 16ch; }
+
+  .bento {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    margin-top: 3rem;
+
+    // Wide first and last cards make a 2-1-1 / 1-1-2 pattern on large screens.
+    @media (min-width: 56rem) {
+      grid-template-columns: repeat(4, 1fr);
+      > :first-child, > :last-child { grid-column: span 2; }
+    }
+
+    h3 { margin: 1rem 0 0.25rem; }
+    p { margin: 0; color: var(--muted); }
+  }
+
+  .faq {
+    max-width: 48rem;
+
+    details { border-bottom: 1px solid var(--border); }
+    summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-block: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      list-style: none;
+      transition: color 0.2s ease;
+
+      &::-webkit-details-marker { display: none; }
+      &:hover { color: var(--accent); }
+    }
+    p { margin: 0 0 1rem; color: var(--muted); }
+  }
+
+  .more { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; p { margin: 0; font-size: 1.2rem; font-weight: 600; } }
 </style>

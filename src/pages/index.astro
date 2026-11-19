@@ -1,47 +1,142 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { SITE } from '../site';
+import Glow from '../components/Glow.astro';
+import Ticker from '../components/Ticker.astro';
+import Stats from '../components/Stats.astro';
+import { SERVICES, CLIENTS, TESTIMONIALS, initials } from '../site';
+
+const work = [
+  {
+    client: 'OfficeSpace',
+    title: 'OfficeSpace Powers Digital Growth with 3+ Years of Strategic Web Partnership',
+    text: 'A complete site rebrand, AI-driven product pages and a webinar and events system, with SDB as the ongoing web partner.',
+    tags: ['3+ Years Together', 'Built to Scale', 'Ops-Ready Infrastructure'],
+  },
+  {
+    client: 'Revenue Analytics',
+    title: 'Revenue Analytics Builds a Website That Works for Sales with SDB Agency',
+    text: 'A website built to support pipeline, with fast pages, conversion tracking and tools for the sales team.',
+    tags: ['Technical SEO Foundation', 'HubSpot Migration to WordPress', 'Landing Pages'],
+  },
+  {
+    client: 'Markup AI',
+    title: 'From Zero to Launch: How Markup AI Built a Scalable Web Presence',
+    text: 'From a blank WordPress install to a conversion-optimized website ready for launch.',
+    tags: ['SEO-Ready Foundation', 'Conversion & Lead Tools', 'Brand Transition'],
+  },
+];
 ---
 
-<Layout title="Home">
+<Layout title="Scalable Website Systems for Growth-Stage SaaS">
   <section class="hero">
-    <h1>Websites that load fast and <span class="gradient-text">get results.</span></h1>
-    <p class="lead">{SITE.name} is a small studio that designs and builds lean, modern websites for growing businesses.</p>
-    <a href="/contact" class="btn">Start a project</a>
-  </section>
-
-  <section>
-    <h2>What we do</h2>
-    <div class="grid">
-      <div class="card">
-        <h3>Design</h3>
-        <p>Clean, focused layouts that make your message clear on every screen.</p>
-      </div>
-      <div class="card">
-        <h3>Build</h3>
-        <p>Fast static sites with no unnecessary code, so pages load in a blink.</p>
-      </div>
-      <div class="card">
-        <h3>Launch</h3>
-        <p>Automatic deploys and simple updates, so your site keeps moving with you.</p>
-      </div>
+    <Glow />
+    <p class="kicker reveal">For growth-stage SaaS teams</p>
+    <h1 class="reveal" style="--i:1">Scalable Website Systems That <span class="gradient-text shimmer">Drive Growth for SaaS</span></h1>
+    <p class="lead reveal" style="--i:2">We design, build and manage scalable website systems for SaaS teams, combining UX, CRO and development to remove bottlenecks and drive consistent growth.</p>
+    <div class="actions reveal" style="--i:3">
+      <a href="/contact" class="btn">Schedule a Call</a>
+      <a href="#work" class="btn btn-ghost">See Our Work</a>
     </div>
   </section>
 
-  <section class="cta card">
-    <h2>Ready to get started?</h2>
-    <p>Tell us about your project and we'll get back to you within one business day.</p>
-    <a href="/contact" class="btn">Get in touch</a>
+  <section class="clients">
+    <p class="label reveal">Great clients bring out our best work</p>
+    <div class="reveal" style="--i:1"><Ticker items={CLIENTS} label="Clients" /></div>
+  </section>
+
+  <section>
+    <Stats />
+  </section>
+
+  <section>
+    <h2 class="reveal">Everything Your Website Needs to Support Growth</h2>
+    <div class="grid">
+      {SERVICES.map(({ title, icon }, i) => (
+        <a href="/services" class="card lift service reveal" style={`--i:${i}`}>
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d={icon} /></svg>
+          <h3>{title}</h3>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section id="work">
+    <h2 class="reveal">Work That Gets Measurable Results for Growth-Stage SaaS</h2>
+    <div class="grid">
+      {work.map(({ client, title, text, tags }, i) => (
+        <article class="card lift reveal" style={`--i:${i}`}>
+          <p class="kicker">{client}</p>
+          <h3>{title}</h3>
+          <p>{text}</p>
+          <ul class="tags">{tags.map((t) => <li>{t}</li>)}</ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <h2 class="reveal">What SaaS Teams Say About Working With Us</h2>
+    <div class="voices">
+      {TESTIMONIALS.map(({ quote, name, role }, i) => (
+        <figure class="voice reveal" style={`--i:${i}`}>
+          <blockquote>“{quote}”</blockquote>
+          <figcaption>
+            <span class="avatar" aria-hidden="true">{initials(name)}</span>
+            <span><strong>{name}</strong><br />{role}</span>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+
+  <section class="cta card reveal">
+    <Glow />
+    <h2>Turn Your Website Into a Stronger Growth Lever</h2>
+    <p>Book a call and we'll find where your website creates friction, loses conversions or underperforms.</p>
+    <a href="/contact" class="btn">Schedule a Call</a>
   </section>
 </Layout>
 
 <style lang="scss">
-  section + section { margin-top: 4rem; }
-  .hero { padding-block: 2rem; }
+  h1 { font-size: clamp(2.5rem, 7vw, 4.5rem); max-width: 16ch; }
+  ul { list-style: none; padding: 0; margin: 0; }
+
+  .clients { margin-top: 3rem; }
+  .label { margin: 0 0 0.75rem; text-align: center; font-size: 0.9rem; color: var(--muted); }
+
+  .service {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--fg);
+    text-decoration: none;
+
+    h3 { flex: 1; margin: 0; font-size: 1.05rem; }
+    .arrow { color: var(--accent-2); transition: translate 0.3s ease; }
+    &:hover .arrow { translate: 4px 0; }
+  }
+
+  article p:not(.kicker) { color: var(--muted); }
+  article .kicker { margin-bottom: 0.5rem; }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+
+    li { padding: 0.2rem 0.6rem; border: 1px solid var(--border); border-radius: 999px; font-size: 0.8rem; color: var(--muted); }
+  }
+
+  .voices { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
 
   .cta {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: 3rem;
     text-align: center;
 
-    p { color: var(--muted); }
+    p { max-width: 36rem; margin-inline: auto; color: var(--muted); }
   }
 </style>

@@ -1,34 +1,68 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Glow from '../components/Glow.astro';
+import Stats from '../components/Stats.astro';
 import { SITE } from '../site';
+
+const howWeWork = [
+  { title: 'Long-term partnership', text: "We don't just deliver projects. Many of our client partnerships run for years, covering both builds and the ongoing work." },
+  { title: 'Sprints and clear communication', text: 'Work runs in sprints, with biweekly calls, a shared Asana board and Slack for day-to-day collaboration.' },
+  { title: 'Fast when it matters', text: 'Landing pages in under 48 hours, and overnight homepage or pricing redesigns when a deadline is tight.' },
+  { title: 'Works with your team', text: 'We work alongside SEO agencies such as Previsible, Victorious, Krossings and Digital Authority Partners.' },
+];
 ---
 
-<Layout title="About" description={`The story behind ${SITE.name}.`}>
-  <h1>About us</h1>
-  <p class="lead">We started {SITE.name} because we believed most websites were slower and more complicated than they needed to be.</p>
+<Layout title="About" description={`${SITE.name} is the website partner growth-stage SaaS teams choose to scale.`}>
+  <section class="hero">
+    <Glow />
+    <p class="kicker reveal">About {SITE.name}</p>
+    <h1 class="reveal" style="--i:1">The Partner SaaS Teams <span class="gradient-text shimmer">Choose to Scale</span></h1>
+    <p class="lead reveal" style="--i:2">Growth-stage SaaS companies often have websites that hold them back: slow to update and hard to scale. We bring clarity, structure and execution.</p>
+  </section>
 
-  <div class="story">
-    <p>What began as a side project building sites for friends' businesses grew into a small studio. Our approach hasn't changed: listen first, keep things simple, and ship work that is fast, accessible and easy to maintain.</p>
-    <p>Today we work with startups, local businesses and established teams. Every project gets the same care, whether it's a one-page launch site or a full rebuild.</p>
-  </div>
+  <section class="story">
+    <p class="reveal">{SITE.name} was founded by Tiago Martins and is based in Singapore. We focus on SaaS and tech companies, designing, building and managing the website systems that help them grow.</p>
+    <p class="reveal" style="--i:1">With 15 years of experience and more than 170 completed projects, we've worked with teams like OfficeSpace, Revenue Analytics, Markup AI, Workzone and DocLib. We've also worked with several TinySeed companies.</p>
+  </section>
 
-  <h2>What we value</h2>
-  <div class="grid">
-    <div class="card">
-      <h3>Simplicity</h3>
-      <p>Only what's needed. Less code means fewer bugs and faster pages.</p>
-    </div>
-    <div class="card">
-      <h3>Honesty</h3>
-      <p>Clear timelines, clear pricing and straight answers.</p>
-    </div>
-    <div class="card">
-      <h3>Craft</h3>
-      <p>Details matter, from typography to page speed.</p>
-    </div>
-  </div>
+  <section>
+    <Stats />
+  </section>
+
+  <section>
+    <h2 class="reveal">How we work</h2>
+    <ol class="grid">
+      {howWeWork.map(({ title, text }, i) => (
+        <li class="card lift reveal" style={`--i:${i}`}>
+          <span class="num">{String(i + 1).padStart(2, '0')}</span>
+          <h3>{title}</h3>
+          <p>{text}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="more reveal">
+    <p>Want to see if we're a fit?</p>
+    <a href="/contact" class="btn">Schedule a Call</a>
+  </section>
 </Layout>
 
 <style lang="scss">
-  .story { max-width: 40rem; margin-bottom: 3rem; }
+  h1 { font-size: clamp(2.5rem, 7vw, 4.5rem); max-width: 14ch; }
+  .story { max-width: 40rem; margin-top: 2rem; font-size: 1.1rem; }
+
+  ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); // 1 or 2 columns…
+
+    @media (min-width: 60rem) { grid-template-columns: repeat(4, 1fr); } // …4 in a row on desktop
+  }
+  .num { font-size: 1.75rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  li h3 { margin: 0.5rem 0 0.25rem; }
+  li p { margin: 0; color: var(--muted); }
+
+  .more { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; p { margin: 0; font-size: 1.2rem; font-weight: 600; } }
 </style>

@@ -1,5 +1,5 @@
 ---
-import { SITE, NAV } from '../site';
+import { SITE, NAV, SOCIAL } from '../site';
 
 const year = new Date().getFullYear();
 ---
@@ -15,10 +15,13 @@ const year = new Date().getFullYear();
     </nav>
     <div>
       <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
-      <p>{SITE.phone}</p>
+      <p>{SITE.address}</p>
+      <p class="social">
+        {SOCIAL.map(({ href, label }) => <a href={href} rel="noopener">{label}</a>)}
+      </p>
     </div>
   </div>
-  <p class="container copy">&copy; {year} {SITE.name}. All rights reserved.</p>
+  <p class="container copy">&copy; {year} {SITE.legalName} All rights reserved.</p>
 </footer>
 
 <style lang="scss">
@@ -31,14 +34,15 @@ const year = new Date().getFullYear();
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-
-    a {
-      color: var(--muted);
-      text-decoration: none;
-
-      &:hover { color: var(--fg); }
-    }
   }
 
-  .copy { padding-block: 0 1.5rem; font-size: 0.85rem; }
+  nav a, .social a {
+    color: var(--muted);
+    text-decoration: none;
+
+    &:hover { color: var(--fg); }
+  }
+
+  .social { display: flex; flex-wrap: wrap; gap: 0.25rem 0.75rem; margin-top: 0.75rem; }
+  .copy { margin-inline: auto; padding-block: 0 1.5rem; font-size: 0.85rem; }
 </style>

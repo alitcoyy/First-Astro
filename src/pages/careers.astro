@@ -1,0 +1,385 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Glow from '../components/Glow.astro';
+import Ticker from '../components/Ticker.astro';
+import { SITE, initials } from '../site';
+
+// Icon paths (24×24, stroked), kept inline so there are no extra requests or dependencies.
+const icons = {
+  home: 'M3 11l9-8 9 8M5 10v10h14V10',
+  coin: 'M12 3a9 9 0 100 18 9 9 0 000-18zM15 9.5c-.6-1-1.7-1.5-3-1.5-1.7 0-3 .9-3 2s1.3 1.7 3 2 3 .9 3 2-1.3 2-3 2c-1.3 0-2.4-.5-3-1.5M12 6v2M12 16v2',
+  team: 'M9 11a4 4 0 100-8 4 4 0 000 8zM2 21v-1a6 6 0 0112 0v1M16 3.5a4 4 0 010 7.5M22 21v-1a6 6 0 00-4-5.6',
+  rocket: 'M5 15c-1.5 1.5-2 5-2 5s3.5-.5 5-2M9 13l2 2M14 4c3 0 6 3 6 6l-8 8-6-6 8-8zM15 9h.01',
+  heart: 'M12 20s-7-4.5-9-9a5 5 0 019-3 5 5 0 019 3c-2 4.5-9 9-9 9z',
+  gift: 'M3 9h18v4H3zM5 13v8h14v-8M12 9v12M12 9S10 3 7.5 4.5 9 9 12 9zM12 9s2-6 4.5-4.5S15 9 12 9z',
+};
+
+const perks = [
+  { icon: icons.home, title: 'Flexible & Remote Working', text: 'Work 100% remote or hybrid. Your choice.' },
+  { icon: icons.coin, title: 'Competitive Salary', text: 'Above-average pay, in a package that reflects your skills and contribution.' },
+  { icon: icons.team, title: 'Collaborative Team', text: 'A supportive team where everyone owns their work and grows together.' },
+  { icon: icons.rocket, title: 'Fulfill Your Potential', text: 'Internal training and growth sessions to keep levelling up.' },
+  { icon: icons.heart, title: 'Health Benefits', text: 'Government health insurance coverage.' },
+  { icon: icons.gift, title: 'Additional Perks', text: 'A yearly in-person gathering, equipment and more.' },
+];
+
+const voices = [
+  { name: 'Arga Dahana', role: 'UX Design Lead', text: 'Remote work gives me a real work-life balance, and the culture is genuinely collaborative.' },
+  { name: 'Dewi Dhanan', role: 'Marketing & Sales', text: "The team collaborates well and invests in my growth. I feel valued, even working remotely." },
+];
+
+const jobs = [
+  {
+    id: 'wordpress-developer',
+    title: 'WordPress Developer',
+    where: 'Indonesia · Remote',
+    tag: 'Development',
+    summary: 'Build high-performance, conversion-focused WordPress sites for SaaS businesses, using strong front-end and back-end skills and an eye for design and UX.',
+    lists: [
+      { title: 'What you’ll do', items: ['Develop, customize and maintain WordPress websites', 'Build responsive layouts that work on every device', 'Optimize speed, security and performance', 'Work closely with UX designers to bring designs to life', 'Debug and resolve WordPress issues', 'Keep up with WordPress best practices', 'Help integrate third-party tools and APIs'] },
+      { title: 'What you bring', items: ['Strong PHP, JavaScript, CSS and HTML', 'Experience with Elementor or Beaver Builder', 'SEO and performance optimization know-how', 'Confident troubleshooting of WordPress issues', 'Experience integrating third-party APIs and plugins', 'Problem-solving and collaboration skills', 'Strong attention to detail'] },
+    ],
+  },
+  {
+    id: 'project-manager',
+    title: 'Project Manager',
+    where: 'Indonesia · Hybrid/Remote',
+    tag: 'Operations',
+    summary: 'Run multiple projects across UX design, development, graphic design and conversion optimization, on time and on budget. You’ll own client communication, team coordination and process improvement. The first 3–6 months are based in Bali, then fully remote.',
+    lists: [
+      { title: 'What you’ll do', items: ['Communicate with clients via Slack and email', 'Coordinate projects across UX, development, design and CRO', 'Lead client meetings, daily stand-ups and weekly sprint planning', 'Manage budgets and timelines', 'Improve processes with leadership', 'Have a say in project structure and strategy'] },
+      { title: 'What you bring', items: ['2–3+ years in a similar role, ideally at a tech or creative agency', 'Excellent English for working with US clients', 'Leadership and problem-solving skills', 'Marketing knowledge (a plus)', 'Flexibility for occasional early client calls (5–7 AM, not daily)', 'A process-driven mindset', 'Comfort with Trello, Hubstaff and Agile/Scrum', 'Based in Indonesia and willing to relocate to Bali for 3–6 months (relocation covered)'] },
+      { title: 'Why join us', items: ['Work with fast-growing SaaS companies', 'Relocation package to Bali, with transport and accommodation covered', 'A small team that values impact', 'Go fully remote after 3–6 months', 'A fast, collaborative environment'] },
+    ],
+  },
+  {
+    id: 'graphic-designer',
+    title: 'Graphic Designer',
+    where: 'Indonesia · Jakarta/Remote',
+    tag: 'Design',
+    summary: 'Create icons, imagery, illustrations, thumbnails and brand collateral for SaaS brands, working with UX designers, developers and project managers.',
+    lists: [
+      { title: 'What you’ll do', items: ['Design icons, imagery and illustrations', 'Create thumbnails and web and content visuals', 'Produce brand collateral: presentations, one-pagers and marketing visuals', 'Support brand consistency across touchpoints', 'Align with UX designers and developers', 'Iterate on feedback to deliver production-ready work'] },
+      { title: 'What you bring', items: ['Strong fundamentals: layout, typography, grid, spacing and hierarchy', 'Logical and abstract thinking', 'Basic UI/UX knowledge', 'Fluency in Photoshop, Illustrator, Figma and Canva', 'Comfort with Google Workspace and tools like Notion or Trello', 'An understanding of branding and visual systems', 'Self-motivated and reliable when working remotely', 'Clear, respectful communication'] },
+      { title: 'Nice to have', items: ['Simple animation or motion design', 'Experience with SaaS or digital products'] },
+    ],
+  },
+  {
+    id: 'ux-designer',
+    title: 'UX Designer',
+    where: 'Indonesia · Hybrid/Remote',
+    tag: 'Design',
+    summary: 'A Senior UX/UI Designer to create conversion-driven designs for SaaS websites and products. You’ll design primarily in Figma, work with our UX, strategy and development teams, and present your work internally and to clients.',
+    lists: [
+      { title: 'What you’ll do', items: ['Design UX and UI for marketing websites and SaaS products', 'Work with UX leads and developers', 'Turn wireframes into polished visuals', 'Build design systems and component libraries in Figma', 'Work with SaaS clients, from startups to established brands', 'Take part in design reviews', 'Craft great experiences across desktop, tablet and mobile'] },
+      { title: 'What you bring', items: ['4+ years in UX/UI design', 'A strong portfolio of marketing-site and/or SaaS work', 'Advanced Figma: components, auto-layout, prototyping and libraries', 'Solid responsive design and usability knowledge', 'Strong visual design skills', 'Designing with conversions and performance in mind', 'Experience working with developers and technical constraints', 'Clear communication for async remote work', 'Prior SaaS experience is a big plus'] },
+      { title: 'How we work', items: ['Fully remote, with async workflows', 'Ownership, accountability and communication', 'A small team with room to grow', 'Quality over quantity'] },
+    ],
+  },
+];
+
+const steps = [
+  { title: 'Apply Online', text: 'Submit your application for an open role.' },
+  { title: 'Initial Chat', text: 'If you’re shortlisted, a short call where you meet the head of the department.' },
+  { title: 'Skills Review', text: 'You may complete a short, skills-based task.' },
+  { title: 'Final Interview', text: 'A deeper conversation about your experience and goals, and a chance to meet the team.' },
+  { title: 'Join Us!', text: 'Welcome aboard.' },
+];
+
+const ticker = ['Remote-first', 'SaaS clients', 'Figma', 'WordPress', 'Webflow', 'Growth sessions', 'Yearly meetup', 'Async workflows'];
+---
+
+<Layout title="Careers" description={`Join ${SITE.name}: remote-first roles in design, development and project management, building digital experiences for SaaS companies.`}>
+  <section class="hero">
+    <Glow />
+    <p class="kicker reveal">Careers at {SITE.name}</p>
+    <h1 class="reveal" style="--i:1">Shape the Future of <span class="gradient-text shimmer">Digital Experiences</span></h1>
+    <p class="lead reveal" style="--i:2">Join a team that values creativity, growth and impact. Work remotely on interesting projects with a supportive team, and help shape the UX of SaaS products.</p>
+    <div class="actions reveal" style="--i:3">
+      <a href="#open-roles" class="btn">See Open Roles</a>
+      <span class="badge"><span class="dot"></span>{jobs.length} roles open now</span>
+    </div>
+  </section>
+
+  <div class="strip" aria-hidden="true"><Ticker items={ticker} /></div>
+
+  <section>
+    <h2 class="reveal">Why You’ll Love Working with Us</h2>
+    <div class="bento">
+      {perks.map(({ icon, title, text }, i) => (
+        <div class="card lift reveal" style={`--i:${i}`}>
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d={icon} /></svg>
+          <h3>{title}</h3>
+          <p>{text}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="voices">
+    {voices.map(({ name, role, text }, i) => (
+      <figure class="voice reveal" style={`--i:${i}`}>
+        <blockquote>“{text}”</blockquote>
+        <figcaption>
+          <span class="avatar" aria-hidden="true">{initials(name)}</span>
+          <span><strong>{name}</strong><br />{role}</span>
+        </figcaption>
+      </figure>
+    ))}
+  </section>
+
+  <section id="open-roles">
+    <h2 class="reveal">Current Open Positions</h2>
+    <p class="lead reveal">Explore opportunities to build digital experiences for SaaS companies.</p>
+    <div class="jobs">
+      {jobs.map(({ id, title, where, tag, summary, lists }, i) => (
+        <details class="job reveal" id={id} style={`--i:${i}`}>
+          <summary>
+            <span class="num">{String(i + 1).padStart(2, '0')}</span>
+            <span class="job-title">
+              <strong>{title}</strong>
+              <small>{where} · Full-Time</small>
+            </span>
+            <span class="tag">{tag}</span>
+            <span class="toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="job-body">
+            <p>{summary}</p>
+            <div class="cols">
+              {lists.map((l) => (
+                <div>
+                  <h4>{l.title}</h4>
+                  <ul>{l.items.map((it) => <li>{it}</li>)}</ul>
+                </div>
+              ))}
+            </div>
+            <a href="#apply" class="btn apply" data-role={title}>Apply Now</a>
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <h2 class="reveal">How We Hire</h2>
+    <p class="lead reveal">A simple, transparent process to find the best fit for both of us.</p>
+    <ol class="steps reveal">
+      {steps.map(({ title, text }, i) => (
+        <li style={`--i:${i}`}>
+          <span class="step-num">{i + 1}</span>
+          <h3>{title}</h3>
+          <p>{text}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section id="apply" class="apply-wrap">
+    <div class="reveal">
+      <h2>Apply to work with us!</h2>
+      <p class="lead">We review every application and portfolio carefully.</p>
+      <p class="hint">Record a 5-minute <a href="https://www.loom.com/" rel="noopener">Loom</a> video telling us about yourself and why you’re a fit for the role, then paste the link in the form.</p>
+    </div>
+
+    <form id="apply-form" class="card reveal" style="--i:1" action="https://api.web3forms.com/submit" method="post">
+      <input type="hidden" name="access_key" value={SITE.web3formsKey} />
+      <input type="hidden" name="subject" value={`New job application from the ${SITE.name} website`} />
+      <input type="hidden" name="from_name" value={`${SITE.name} careers`} />
+      <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+      <label class="full">Role
+        <select name="role" required>
+          <option value="" disabled selected>Select a role…</option>
+          {jobs.map((j) => <option>{j.title}</option>)}
+        </select>
+      </label>
+      <label>First name <input type="text" name="first_name" autocomplete="given-name" required /></label>
+      <label>Last name <input type="text" name="last_name" autocomplete="family-name" required /></label>
+      <label>Email address <input type="email" name="email" autocomplete="email" required /></label>
+      <label>Phone number <input type="tel" name="phone" autocomplete="tel" required /></label>
+      <label>Where are you based? <input type="text" name="location" autocomplete="address-level2" required /></label>
+      <label>LinkedIn profile URL <input type="url" name="linkedin" placeholder="https://linkedin.com/in/…" required /></label>
+      <label>Portfolio link <span class="opt">(optional)</span> <input type="url" name="portfolio" placeholder="https://" /></label>
+      <label>Loom video URL <input type="url" name="loom" placeholder="https://www.loom.com/share/…" required /></label>
+      <label class="full">Resume/CV link <span class="opt">(Google Drive, Dropbox, etc.)</span>
+        <input type="url" name="resume" placeholder="https://" required />
+      </label>
+
+      <button type="submit" class="btn full">Submit Application</button>
+      <p class="status full" role="status" aria-live="polite" hidden></p>
+    </form>
+  </section>
+</Layout>
+
+<style lang="scss">
+  ul, ol { list-style: none; padding: 0; margin: 0; }
+
+  // ---------- Hero ----------
+  h1 { font-size: clamp(2.5rem, 7vw, 4.5rem); max-width: 14ch; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 999px;
+    background: var(--surface); font-size: 0.9rem; font-weight: 600;
+  }
+  .dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: #22c55e; animation: pulse 2s infinite; }
+  .strip { margin-top: 2rem; }
+  .strip + section { margin-top: 5rem; }
+
+  // ---------- Perks bento ----------
+  .bento {
+    display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+
+    @media (min-width: 56rem) {
+      grid-template-columns: repeat(4, 1fr);
+      > :first-child, > :last-child { grid-column: span 2; }
+    }
+
+    h3 { margin: 1rem 0 0.25rem; }
+    p { margin: 0; color: var(--muted); }
+  }
+
+  .voices { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); }
+
+  // ---------- Jobs ----------
+  .jobs { display: grid; gap: 0.75rem; margin-top: 2rem; }
+  .job {
+    border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover, &[open] { border-color: var(--accent); box-shadow: 0 10px 30px -15px color-mix(in srgb, var(--accent) 50%, transparent); }
+  }
+  summary {
+    display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 1rem;
+    padding: 1.25rem 1.5rem; cursor: pointer; list-style: none;
+
+    &::-webkit-details-marker { display: none; }
+  }
+  .num { font-weight: 700; font-size: 1.5rem; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .job-title { display: grid; strong { font-size: 1.2rem; } small { color: var(--muted); } }
+  .tag { padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; background: color-mix(in srgb, var(--accent-2) 15%, transparent); }
+
+  .job-body {
+    padding: 0 1.5rem 1.5rem;
+
+    > p { max-width: 48rem; margin-top: 0; }
+    .cols { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); margin: 1.5rem 0; }
+    h4 { margin: 0 0 0.5rem; }
+    li { position: relative; padding-left: 1.25rem; margin-bottom: 0.35rem; color: var(--muted); }
+    li::before { content: ''; position: absolute; left: 0; top: 0.6em; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--gradient); }
+  }
+
+  @media (max-width: 36rem) {
+    summary { grid-template-columns: auto 1fr auto; }
+    .tag { display: none; }
+  }
+
+  // ---------- Hiring steps: a line draws across as the list scrolls in ----------
+  .steps {
+    position: relative; display: grid; gap: 1.5rem; margin-top: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+
+    &::before { content: ''; position: absolute; top: 1.5rem; left: 1.5rem; right: 1.5rem; height: 2px; background: var(--gradient); transform-origin: left; transition: scale 1.4s ease 0.2s; }
+    @media (max-width: 58rem) { &::before { display: none; } }
+
+    li { position: relative; transition: opacity 0.5s ease, translate 0.5s ease; transition-delay: calc(var(--i) * 180ms + 0.2s); }
+    h3 { margin: 1rem 0 0.25rem; font-size: 1.1rem; }
+    p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+  }
+  .step-num {
+    position: relative; display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--accent); font-weight: 700; font-size: 1.1rem;
+  }
+  .steps li:last-child .step-num { background: var(--gradient); border: 0; color: var(--accent-fg); }
+
+  @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    .steps:not(.in) {
+      &::before { scale: 0 1; }
+      li { opacity: 0; translate: 0 1rem; }
+    }
+  }
+
+  // ---------- Application form ----------
+  .apply-wrap { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); align-items: start; }
+  .hint { padding: 1rem; border-radius: var(--radius); background: var(--surface); border: 1px dashed var(--border); font-size: 0.95rem; }
+
+  @media (min-width: 56rem) { .apply-wrap { grid-template-columns: 1fr 1.6fr; } }
+
+  form { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+  .full { grid-column: 1 / -1; }
+  label { display: grid; gap: 0.35rem; font-weight: 600; font-size: 0.95rem; }
+  .opt { font-weight: 400; color: var(--muted); }
+
+  input, select {
+    font: inherit; font-weight: 400; padding: 0.65rem 0.75rem;
+    border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--fg);
+
+    &:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  }
+  button { justify-self: start; &:disabled { opacity: 0.6; cursor: wait; } }
+  select.flash { animation: flash 1s ease; }
+
+  .hp { display: none; }
+  .status {
+    margin: 0; padding: 0.75rem 1rem; border-radius: var(--radius); font-weight: 600;
+    &.ok { background: color-mix(in srgb, var(--accent) 15%, transparent); }
+    &.err { background: color-mix(in srgb, var(--accent-2) 15%, transparent); }
+  }
+
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgb(34 197 94 / 0.6); } 70%, 100% { box-shadow: 0 0 0 0.6rem rgb(34 197 94 / 0); } }
+  @keyframes flash { 30% { outline: 3px solid var(--accent-2); outline-offset: 3px; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dot, select.flash { animation: none; }
+    .job, .steps::before, .steps li { transition: none; }
+  }
+</style>
+
+<script>
+  // "Apply Now" preselects the role in the form.
+  const form = document.getElementById('apply-form') as HTMLFormElement;
+  const role = form.elements.namedItem('role') as HTMLSelectElement;
+  document.querySelectorAll<HTMLAnchorElement>('[data-role]').forEach((a) =>
+    a.addEventListener('click', () => {
+      role.value = a.dataset.role!;
+      role.classList.remove('flash');
+      requestAnimationFrame(() => role.classList.add('flash'));
+    }),
+  );
+
+  // Open a job card when the URL points at it, e.g. /careers#ux-designer.
+  const target = location.hash && document.querySelector<HTMLDetailsElement>(`details${location.hash}`);
+  if (target) target.open = true;
+
+  // Submit via Web3Forms with an inline status message (falls back to a normal POST without JS).
+  const button = form.querySelector('button')!;
+  const status = form.querySelector('.status') as HTMLElement;
+  const show = (msg: string, ok: boolean) => {
+    status.textContent = msg;
+    status.className = `status full ${ok ? 'ok' : 'err'}`;
+    status.hidden = false;
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    button.disabled = true;
+    button.textContent = 'Submitting…';
+    status.hidden = true;
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.message);
+      form.reset();
+      show('Thanks for applying! We review every application carefully and will be in touch.', true);
+    } catch (err) {
+      show(`Sorry, something went wrong${err instanceof Error && err.message ? `: ${err.message}` : ''}. Please try again.`, false);
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Submit Application';
+    }
+  });
+</script>

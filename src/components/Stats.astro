@@ -1,0 +1,50 @@
+---
+import { STATS } from '../site';
+---
+
+<ul class="stats">
+  {STATS.map(({ value, label }, i) => (
+    <li class="reveal" style={`--i:${i}`}>
+      <strong class="gradient-text" data-count={value}>{value}</strong>
+      {label}
+    </li>
+  ))}
+</ul>
+
+<style lang="scss">
+  .stats {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+    color: var(--muted);
+
+    strong { display: block; font-size: clamp(2.5rem, 6vw, 3.5rem); line-height: 1.1; font-variant-numeric: tabular-nums; }
+  }
+</style>
+
+<script>
+  // Count each number up from 0 when it scrolls into view. Without JS (or with reduced motion)
+  // the final value is simply shown.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        io.unobserve(e.target);
+        const el = e.target as HTMLElement;
+        const [, num, suffix] = el.dataset.count!.match(/(\d+)(.*)/)!;
+        const start = performance.now();
+        const tick = (now: number) => {
+          const p = Math.min((now - start) / 1400, 1);
+          el.textContent = Math.round(+num * (1 - (1 - p) ** 3)) + suffix; // ease-out cubic
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    }, { threshold: 0.5 });
+    document.querySelectorAll('[data-count]').forEach((el) => io.observe(el));
+  }
+</script>

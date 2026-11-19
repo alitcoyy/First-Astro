@@ -1,43 +1,90 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { SITE } from '../site';
+import Glow from '../components/Glow.astro';
+import { SITE, TESTIMONIALS, initials } from '../site';
+
+const quote = TESTIMONIALS[0];
+const helpWith = ['Website Revamp', 'SaaS Product UX Design', 'Brand and Sales Collaterals', 'Conversion Rate Optimization'];
+const budgets = ['Under $10,000', '$10,000 - $25,000', '$25,000 - $50,000', '$50,000+'];
+const sources = ['TinySeed', 'Conference', 'Referral', 'Google', 'Other'];
 ---
 
-<Layout title="Contact" description={`Get in touch with ${SITE.name}.`}>
-  <h1>Contact</h1>
-  <p class="lead">Have a project in mind? Send us a message and we'll reply within one business day.</p>
+<Layout title="Schedule a call" description={`Schedule a call with ${SITE.name} about your website revamp, SaaS product UX, sales collateral or conversion optimization.`}>
+  <section class="hero">
+    <Glow />
+    <p class="kicker reveal">Contact</p>
+    <h1 class="reveal" style="--i:1">Schedule <span class="gradient-text shimmer">a call</span></h1>
+    <p class="lead reveal" style="--i:2">Need a website revamp or a better SaaS product experience? Fill in the form and we'll get in touch to schedule a call.</p>
+  </section>
 
   <div class="wrap">
     <!-- Submits to Web3Forms. With JS: AJAX + inline message. Without JS: normal POST to Web3Forms' result page. -->
-    <form id="contact-form" class="card" action="https://api.web3forms.com/submit" method="post">
+    <form id="contact-form" class="card reveal" action="https://api.web3forms.com/submit" method="post">
       <input type="hidden" name="access_key" value={SITE.web3formsKey} />
       <input type="hidden" name="subject" value={`New message from the ${SITE.name} website`} />
       <input type="hidden" name="from_name" value={`${SITE.name} website`} />
       <!-- Honeypot: hidden from people; bots that tick it are rejected by Web3Forms. -->
       <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
       <label>
-        Name
+        Full name
         <input type="text" name="name" autocomplete="name" required />
       </label>
       <label>
-        Email
+        Company’s website
+        <input type="url" name="website" autocomplete="url" placeholder="https://" />
+      </label>
+      <label>
+        Phone number
+        <input type="tel" name="phone" autocomplete="tel" />
+      </label>
+      <label>
+        Email address
         <input type="email" name="email" autocomplete="email" required />
       </label>
       <label>
-        Message
+        Yearly budget
+        <select name="budget" required>
+          <option value="" disabled selected>Select…</option>
+          {budgets.map((b) => <option>{b}</option>)}
+        </select>
+      </label>
+      <label>
+        How did you hear about us?
+        <select name="source">
+          <option value="" disabled selected>Select…</option>
+          {sources.map((s) => <option>{s}</option>)}
+        </select>
+      </label>
+      <label>
+        How can we help you?
         <textarea name="message" rows="6" required></textarea>
       </label>
-      <button type="submit" class="btn">Send message</button>
+      <button type="submit" class="btn">Send</button>
       <p class="status" role="status" aria-live="polite" hidden></p>
     </form>
 
-    <address>
-      <h2>Details</h2>
-      <p><strong>Email</strong><br /><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
-      <p><strong>Phone</strong><br /><a href={`tel:${SITE.phone.replace(/[^\d+]/g, '')}`}>{SITE.phone}</a></p>
-      <p><strong>Address</strong><br />{SITE.address}</p>
-      <p><strong>Hours</strong><br />Mon–Fri, 9:00–17:00</p>
-    </address>
+    <div class="side">
+      <div class="reveal" style="--i:1">
+        <h2>We can help with</h2>
+        <ul class="help">
+          {helpWith.map((h) => <li>{h}</li>)}
+        </ul>
+      </div>
+
+      <address class="reveal" style="--i:2">
+        <h2>Details</h2>
+        <p><strong>Email</strong><br /><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+        <p><strong>Address</strong><br />{SITE.legalName}<br />{SITE.address}</p>
+      </address>
+
+      <figure class="voice reveal" style="--i:3">
+        <blockquote>“{quote.quote}”</blockquote>
+        <figcaption>
+          <span class="avatar" aria-hidden="true">{initials(quote.name)}</span>
+          <span><strong>{quote.name}</strong><br />{quote.role}</span>
+        </figcaption>
+      </figure>
+    </div>
   </div>
 </Layout>
 
@@ -52,7 +99,7 @@ import { SITE } from '../site';
   form { display: grid; gap: 1rem; }
   label { display: grid; gap: 0.35rem; font-weight: 600; }
 
-  input, textarea {
+  input, select, textarea {
     font: inherit;
     font-weight: 400;
     padding: 0.65rem 0.75rem;
@@ -70,10 +117,18 @@ import { SITE } from '../site';
     &:disabled { opacity: 0.6; cursor: wait; }
   }
 
-  address {
-    font-style: normal;
+  .wrap { margin-top: 2rem; }
+  .side { display: grid; gap: 2rem; }
+  .side h2 { margin-top: 0; }
+  address { font-style: normal; }
 
-    h2 { margin-top: 0; }
+  .help {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li { position: relative; padding-left: 1.25rem; margin-bottom: 0.35rem; }
+    li::before { content: ''; position: absolute; left: 0; top: 0.6em; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--gradient); }
   }
 
   .hp { display: none; }
@@ -114,12 +169,12 @@ import { SITE } from '../site';
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.message);
       form.reset();
-      show("Thanks! Your message has been sent. We'll get back to you within one business day.", true);
+      show("Thanks! Your request has been sent. We'll be in touch to schedule a call.", true);
     } catch (err) {
       show(`Sorry, something went wrong${err instanceof Error && err.message ? `: ${err.message}` : ''}. Please try again or email us directly.`, false);
     } finally {
       button.disabled = false;
-      button.textContent = 'Send message';
+      button.textContent = 'Send';
     }
   });
 </script>

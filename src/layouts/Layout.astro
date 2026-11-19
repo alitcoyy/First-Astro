@@ -94,6 +94,8 @@ const { title, description = SITE.description } = Astro.props;
     &:hover { opacity: 0.9; }
   }
 
+  .btn-ghost { background: none; color: var(--fg); box-shadow: inset 0 0 0 1px var(--border); }
+
   .grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
 
   .card {
@@ -106,4 +108,89 @@ const { title, description = SITE.description } = Astro.props;
   }
 
   .gradient-text { background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  // ---------- Shared page pieces ----------
+  body { overflow-x: clip; } // decorative glows/tickers never cause sideways scroll
+  section + section { margin-top: 5rem; }
+  .hero { position: relative; isolation: isolate; padding-block: 2rem; }
+  .kicker { margin: 0 0 1rem; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-2); }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-top: 2rem; }
+
+  .btn {
+    transition: translate 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+
+    &:hover { translate: 0 -2px; box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--accent-2) 70%, transparent); }
+  }
+  .btn-ghost:hover { box-shadow: inset 0 0 0 1px var(--accent); }
+
+  // Animated gradient text for hero headlines.
+  .shimmer { background-image: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent)); background-size: 200% auto; animation: shimmer 6s linear infinite; }
+
+  // Cards that lift on hover, with a gradient bar drawing in along the bottom.
+  .lift {
+    position: relative;
+    overflow: hidden;
+    transition: translate 0.3s ease, border-color 0.3s ease;
+
+    &::after { content: ''; position: absolute; inset: auto 0 0; height: 3px; background: var(--gradient); scale: 0 1; transform-origin: left; transition: scale 0.4s ease; }
+    &:hover { translate: 0 -4px; border-color: var(--accent); }
+    &:hover::after { scale: 1 1; }
+  }
+
+  // Quote with a gradient rule and an initials avatar.
+  .voice {
+    margin: 0;
+    padding-left: 1.5rem;
+    border-left: 3px solid;
+    border-image: var(--gradient) 1;
+
+    blockquote { margin: 0 0 1rem; font-size: 1.2rem; line-height: 1.5; }
+    figcaption { display: flex; align-items: center; gap: 0.75rem; color: var(--muted); font-size: 0.9rem; }
+    strong { color: var(--fg); }
+  }
+  .avatar { flex: none; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--gradient); color: var(--accent-fg); font-weight: 700; font-size: 0.85rem; }
+
+  // Small line icons on a gradient tile.
+  .icon { width: 2.5rem; height: 2.5rem; padding: 0.5rem; border-radius: var(--radius); background: var(--gradient); fill: none; stroke: var(--accent-fg); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  // Accordions open and close smoothly where the browser supports animating to auto height.
+  details { interpolate-size: allow-keywords; }
+  details::details-content { block-size: 0; overflow: hidden; transition: block-size 0.4s ease, content-visibility 0.4s allow-discrete; }
+  details[open]::details-content { block-size: auto; }
+
+  // Plus icon that turns into a minus when its <details> opens.
+  .toggle {
+    position: relative;
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+
+    &::before, &::after { content: ''; position: absolute; inset: 50% 0 auto; height: 2px; margin-top: -1px; background: var(--fg); transition: rotate 0.3s ease; }
+    &::after { rotate: 90deg; }
+  }
+  details[open] .toggle::after { rotate: 0deg; }
+
+  // ---------- Scroll reveal ----------
+  // Content is only hidden when JS is available to reveal it again. Keyframes (not transitions)
+  // so hover transitions on the same elements don't fight the stagger delay (--i).
+  @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    .reveal:not(.in) { opacity: 0; }
+    .reveal.in { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--i, 0) * 90ms) both; }
+  }
+
+  @keyframes rise { from { opacity: 0; translate: 0 1.5rem; } }
+  @keyframes shimmer { to { background-position: 200% center; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shimmer { animation: none; }
+    .btn, .lift, .lift::after, details::details-content { transition: none; }
+  }
 </style>
+
+<script>
+  // Reveal .reveal elements as they scroll into view (adds .in once).
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+</script>
