@@ -111,6 +111,7 @@ const { title, description = SITE.description } = Astro.props;
 
   // ---------- Shared page pieces ----------
   body { overflow-x: clip; } // decorative glows/tickers never cause sideways scroll
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } } // in-page links and "Back to top"
   section + section { margin-top: 5rem; }
   .hero { position: relative; isolation: isolate; padding-block: 2rem; }
   .kicker { margin: 0 0 1rem; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-2); }

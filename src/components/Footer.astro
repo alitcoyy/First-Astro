@@ -1,48 +1,168 @@
 ---
 import { SITE, NAV, SOCIAL } from '../site';
+import logo from '../assets/sdb-logo-white.webp';
 
 const year = new Date().getFullYear();
 ---
 
 <footer>
-  <div class="container cols">
-    <div>
-      <strong>{SITE.name}</strong>
+  <div class="container top">
+    <div class="brand">
+      <a href="/" class="logo">
+        <img src={logo.src} alt={SITE.name} width={logo.width / 2} height={logo.height / 2} loading="lazy" decoding="async" />
+      </a>
       <p>{SITE.description}</p>
+      <a href="/contact" class="btn">Schedule a Call</a>
     </div>
+
     <nav aria-label="Footer">
-      {NAV.map(({ href, label }) => <a href={href}>{label}</a>)}
+      <h2>Company</h2>
+      <ul>{NAV.map(({ href, label }) => <li><a href={href}>{label}</a></li>)}</ul>
     </nav>
+
     <div>
-      <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
-      <p>{SITE.address}</p>
-      <p class="social">
-        {SOCIAL.map(({ href, label }) => <a href={href} rel="noopener">{label}</a>)}
-      </p>
+      <h2>Get in touch</h2>
+      <ul>
+        <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+        <li><address>{SITE.address}</address></li>
+      </ul>
+    </div>
+
+    <div>
+      <h2>Follow us</h2>
+      <ul class="social">
+        {SOCIAL.map(({ href, label, icon }) => (
+          <li>
+            <a href={href} rel="noopener" aria-label={label} title={label}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d={icon} /></svg>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   </div>
-  <p class="container copy">&copy; {year} {SITE.legalName} All rights reserved.</p>
+
+  <div class="container bottom">
+    <p>&copy; {year} {SITE.legalName} All rights reserved.</p>
+    <a href="#" class="to-top">Back to top <span aria-hidden="true">↑</span></a>
+  </div>
+
+  <p class="wordmark" aria-hidden="true">{SITE.name}</p>
 </footer>
 
 <style lang="scss">
-  footer { border-top: 1px solid var(--border); background: var(--surface); color: var(--muted); font-size: 0.95rem; }
-  .cols { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); padding-block: 2rem 1rem; }
-  strong { color: var(--fg); }
-  p { margin: 0.25rem 0 0; }
+  footer {
+    position: relative;
+    overflow: hidden;
+    margin-top: 1rem;
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 0.95rem;
 
-  nav {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+    // Gradient hairline across the top.
+    &::before { content: ''; position: absolute; inset: 0 0 auto; height: 2px; background: var(--gradient); }
   }
 
-  nav a, .social a {
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+
+  a:not(.btn) {
     color: var(--muted);
     text-decoration: none;
+    transition: color 0.2s ease;
 
     &:hover { color: var(--fg); }
   }
 
-  .social { display: flex; flex-wrap: wrap; gap: 0.25rem 0.75rem; margin-top: 0.75rem; }
-  .copy { margin-inline: auto; padding-block: 0 1.5rem; font-size: 0.85rem; }
+  .top {
+    display: grid;
+    gap: 2.5rem 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    padding-block: 4rem 3rem;
+
+    @media (min-width: 56rem) { grid-template-columns: 2fr 1fr 1.3fr 1fr; }
+  }
+
+  .brand {
+    max-width: 24rem;
+
+    @media (max-width: 56rem) { grid-column: 1 / -1; }
+
+    p { margin: 1rem 0 1.5rem; line-height: 1.6; }
+  }
+
+  .logo img {
+    display: block;
+    filter: brightness(0); // the logo is white: darken it on the light theme
+
+    @media (prefers-color-scheme: dark) { filter: none; }
+  }
+
+  h2 { margin: 0 0 1rem; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg); }
+  address { font-style: normal; line-height: 1.6; }
+
+  // Underline that draws in on hover for text links.
+  nav a {
+    background: linear-gradient(var(--accent-2), var(--accent-2)) left bottom / 0 1px no-repeat;
+    transition: color 0.2s ease, background-size 0.3s ease;
+
+    &:hover { background-size: 100% 1px; }
+  }
+
+  .social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    a {
+      display: grid;
+      place-items: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--fg);
+      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, translate 0.2s ease;
+
+      &:hover { color: var(--accent-fg); border-color: transparent; background: var(--gradient); translate: 0 -2px; }
+    }
+
+    svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  }
+
+  .bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.85rem;
+
+    p { margin: 0; }
+  }
+
+  .to-top span { display: inline-block; transition: translate 0.2s ease; }
+  .to-top:hover span { translate: 0 -3px; }
+
+  // Oversized, faint brand name that bleeds off the bottom edge.
+  .wordmark {
+    margin: 0 0 -0.22em;
+    text-align: center;
+    font-size: clamp(3.5rem, 15vw, 12rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    opacity: 0.12;
+    user-select: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    a, nav a, .social a, .to-top span { transition: none; }
+  }
 </style>

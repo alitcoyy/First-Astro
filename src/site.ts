@@ -18,12 +18,13 @@ export const NAV = [
   { href: '/contact', label: 'Contact' },
 ];
 
+// `icon` is a 24×24 stroked SVG path.
 export const SOCIAL = [
-  { href: 'https://www.linkedin.com/company/sdbagency', label: 'LinkedIn' },
-  { href: 'https://www.instagram.com/sdbagency/', label: 'Instagram' },
-  { href: 'https://dribbble.com/sdbagency', label: 'Dribbble' },
-  { href: 'https://www.facebook.com/sdbagency/', label: 'Facebook' },
-  { href: 'https://x.com/sdbagency', label: 'X' },
+  { href: 'https://www.linkedin.com/company/sdbagency', label: 'LinkedIn', icon: 'M4 4h16v16H4zM8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 00-4 0' },
+  { href: 'https://www.instagram.com/sdbagency/', label: 'Instagram', icon: 'M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zM16 11.4A4 4 0 1112.6 8 4 4 0 0116 11.4zM17.5 6.5h.01' },
+  { href: 'https://dribbble.com/sdbagency', label: 'Dribbble', icon: 'M12 3a9 9 0 100 18 9 9 0 000-18zM8.6 3.7c3.6 4.5 6 10 7.2 16.2M3.1 10.5c5.6.3 10.8-.9 15-4M5.5 18.3c3.4-4.4 8.6-6 15.4-4.6' },
+  { href: 'https://www.facebook.com/sdbagency/', label: 'Facebook', icon: 'M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z' },
+  { href: 'https://x.com/sdbagency', label: 'X', icon: 'M4 4l11.7 16H20L8.3 4H4zM4 20l6.8-6.8M20 4l-6.8 6.8' },
 ];
 
 // `icon` is a 24×24 stroked SVG path, rendered with the global `.icon` class.
