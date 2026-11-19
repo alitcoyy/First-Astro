@@ -1,0 +1,26 @@
+---
+import { SITE, NAV } from '../site';
+
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<header>
+  <div class="container bar">
+    <a href="/" class="brand gradient-text">{SITE.name}</a>
+    <nav aria-label="Main">
+      {NAV.map(({ href, label }) => (
+        <a href={href} aria-current={current === href ? 'page' : undefined}>{label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  header { border-bottom: 1px solid var(--border); }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1.5rem; padding-block: 1rem; }
+  .brand { font-weight: 700; font-size: 1.15rem; color: var(--fg); text-decoration: none; }
+  nav { display: flex; flex-wrap: wrap; gap: 1.25rem; }
+  nav a { color: var(--muted); text-decoration: none; }
+  nav a:hover, nav a[aria-current='page'] { color: var(--fg); }
+  nav a[aria-current='page'] { font-weight: 600; text-decoration: underline; text-decoration-color: var(--accent-2); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+</style>

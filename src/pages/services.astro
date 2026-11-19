@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const services = [
+  { title: 'Website design', text: 'Custom layouts and visual design tailored to your brand and audience.' },
+  { title: 'Website development', text: 'Fast, accessible static sites built with modern tools like Astro.' },
+  { title: 'Redesigns', text: 'Refresh an outdated site with a cleaner look and better performance.' },
+  { title: 'Care & maintenance', text: 'Ongoing updates, content changes and monitoring after launch.' },
+];
+---
+
+<Layout title="Services" description="Website design, development, redesigns and ongoing care.">
+  <h1>Services</h1>
+  <p class="lead">Everything you need to plan, build and run a great website.</p>
+
+  <div class="grid">
+    {services.map(({ title, text }) => (
+      <div class="card">
+        <h3>{title}</h3>
+        <p>{text}</p>
+      </div>
+    ))}
+  </div>
+
+  <p class="more">Not sure what you need? <a href="/contact">Get in touch</a> and we'll help you figure it out.</p>
+</Layout>
+
+<style>
+  .more { margin-top: 3rem; }
+</style>

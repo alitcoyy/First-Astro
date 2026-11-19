@@ -1,12 +1,43 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import { SITE } from '../site';
 ---
 
-<Layout>
-	<h2>This is My First Astro Boy!</h2>
-	<Welcome />
+<Layout title="Home">
+  <section class="hero">
+    <h1>Websites that load fast and <span class="gradient-text">get results.</span></h1>
+    <p class="lead">{SITE.name} is a small studio that designs and builds lean, modern websites for growing businesses.</p>
+    <a href="/contact" class="btn">Start a project</a>
+  </section>
+
+  <section>
+    <h2>What we do</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Design</h3>
+        <p>Clean, focused layouts that make your message clear on every screen.</p>
+      </div>
+      <div class="card">
+        <h3>Build</h3>
+        <p>Fast static sites with no unnecessary code, so pages load in a blink.</p>
+      </div>
+      <div class="card">
+        <h3>Launch</h3>
+        <p>Automatic deploys and simple updates, so your site keeps moving with you.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta card">
+    <h2>Ready to get started?</h2>
+    <p>Tell us about your project and we'll get back to you within one business day.</p>
+    <a href="/contact" class="btn">Get in touch</a>
+  </section>
 </Layout>
+
+<style>
+  section + section { margin-top: 4rem; }
+  .hero { padding-block: 2rem; }
+  .cta { text-align: center; }
+  .cta p { color: var(--muted); }
+</style>
