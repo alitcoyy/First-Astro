@@ -8,8 +8,13 @@ import { SITE } from '../site';
   <p class="lead">Have a project in mind? Send us a message and we'll reply within one business day.</p>
 
   <div class="wrap">
-    <!-- Layout only: point `action` at a form handler (e.g. Formspree or a Vercel function) to receive submissions. -->
-    <form class="card" method="post">
+    <!-- Submits to Web3Forms. With JS: AJAX + inline message. Without JS: normal POST to Web3Forms' result page. -->
+    <form id="contact-form" class="card" action="https://api.web3forms.com/submit" method="post">
+      <input type="hidden" name="access_key" value={SITE.web3formsKey} />
+      <input type="hidden" name="subject" value={`New message from the ${SITE.name} website`} />
+      <input type="hidden" name="from_name" value={`${SITE.name} website`} />
+      <!-- Honeypot: hidden from people; bots that tick it are rejected by Web3Forms. -->
+      <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
       <label>
         Name
         <input type="text" name="name" autocomplete="name" required />
@@ -23,6 +28,7 @@ import { SITE } from '../site';
         <textarea name="message" rows="6" required></textarea>
       </label>
       <button type="submit" class="btn">Send message</button>
+      <p class="status" role="status" aria-live="polite" hidden></p>
     </form>
 
     <address>
@@ -35,10 +41,17 @@ import { SITE } from '../site';
   </div>
 </Layout>
 
-<style>
+<style lang="scss">
+  // Tinted background for the status message, from a theme colour.
+  @mixin tint($color) {
+    background: color-mix(in srgb, $color 15%, transparent);
+    color: var(--fg);
+  }
+
   .wrap { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); align-items: start; }
   form { display: grid; gap: 1rem; }
   label { display: grid; gap: 0.35rem; font-weight: 600; }
+
   input, textarea {
     font: inherit;
     font-weight: 400;
@@ -47,9 +60,66 @@ import { SITE } from '../site';
     border-radius: var(--radius);
     background: var(--bg);
     color: var(--fg);
+
+    &:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
   }
-  input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-  button { justify-self: start; }
-  address { font-style: normal; }
-  address h2 { margin-top: 0; }
+
+  button {
+    justify-self: start;
+
+    &:disabled { opacity: 0.6; cursor: wait; }
+  }
+
+  address {
+    font-style: normal;
+
+    h2 { margin-top: 0; }
+  }
+
+  .hp { display: none; }
+
+  .status {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+
+    &.ok { @include tint(var(--accent)); }
+    &.err { @include tint(var(--accent-2)); }
+  }
 </style>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const button = form.querySelector('button')!;
+  const status = form.querySelector('.status') as HTMLElement;
+
+  const show = (msg: string, ok: boolean) => {
+    status.textContent = msg;
+    status.className = `status ${ok ? 'ok' : 'err'}`;
+    status.hidden = false;
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    button.disabled = true;
+    button.textContent = 'Sending…';
+    status.hidden = true;
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.message);
+      form.reset();
+      show("Thanks! Your message has been sent. We'll get back to you within one business day.", true);
+    } catch (err) {
+      show(`Sorry, something went wrong${err instanceof Error && err.message ? `: ${err.message}` : ''}. Please try again or email us directly.`, false);
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Send message';
+    }
+  });
+</script>

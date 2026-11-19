@@ -21,13 +21,24 @@ const year = new Date().getFullYear();
   <p class="container copy">&copy; {year} {SITE.name}. All rights reserved.</p>
 </footer>
 
-<style>
+<style lang="scss">
   footer { border-top: 1px solid var(--border); background: var(--surface); color: var(--muted); font-size: 0.95rem; }
   .cols { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); padding-block: 2rem 1rem; }
   strong { color: var(--fg); }
   p { margin: 0.25rem 0 0; }
-  nav { display: flex; flex-direction: column; gap: 0.25rem; }
-  nav a { color: var(--muted); text-decoration: none; }
-  nav a:hover { color: var(--fg); }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    a {
+      color: var(--muted);
+      text-decoration: none;
+
+      &:hover { color: var(--fg); }
+    }
+  }
+
   .copy { padding-block: 0 1.5rem; font-size: 0.85rem; }
 </style>
