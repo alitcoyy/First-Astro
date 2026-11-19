@@ -1,5 +1,4 @@
 ---
-import { Image } from 'astro:assets';
 import { SITE, NAV } from '../site';
 import logo from '../assets/sdb-logo-white.webp';
 
@@ -9,7 +8,8 @@ const current = Astro.url.pathname.replace(/\/$/, '') || '/';
 <header>
   <div class="container bar">
     <a href="/" class="brand">
-      <Image src={logo} alt={SITE.name} loading="eager" />
+      <!-- Original file, not re-encoded; shown at half its pixel size so it's sharp on 2x (Retina) screens. -->
+      <img src={logo.src} alt={SITE.name} width={logo.width / 2} height={logo.height / 2} decoding="async" />
     </a>
     <nav aria-label="Main">
       {NAV.map(({ href, label }) => (
@@ -26,8 +26,6 @@ const current = Astro.url.pathname.replace(/\/$/, '') || '/';
     display: flex;
 
     img {
-      height: 28px;
-      width: auto;
       // The logo is white: darken it on the light theme, keep it white on dark.
       filter: brightness(0);
 
